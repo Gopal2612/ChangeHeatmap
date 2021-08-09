@@ -1,8 +1,8 @@
-import React from 'react';
+import React,{useState} from 'react';
 import moment from "moment";
 import Cell from './Cell';
 import "./App.css";
-
+import Footer from './Footer'
 
 
 const DayNames = {
@@ -36,6 +36,8 @@ const findMaxMin = (data) => {
   }
 
 function Timeline({ range, data }) {
+  const [isVisible, setisVisible] = useState(false)
+  const [Data, setData] = useState({})
     let days = Math.abs(range[0].diff(range[1], "days"));
     let cells = Array.from(new Array(days));
     let weekDays = Array.from(new Array(7));
@@ -44,6 +46,11 @@ function Timeline({ range, data }) {
     let startDate = range[0];
     const max_min = findMaxMin(data);
   
+    const handleOnClick = (data) => {
+      setData(data)
+      setisVisible(true)
+  }
+
     return (
       <div className="timeline">
         <div className="timeline-months">
@@ -72,13 +79,15 @@ function Timeline({ range, data }) {
                       (obj) => obj.date === moment(date).format("YYYY-MM-DD")
                     )[0]
                   }
-                />
+                  onclick={handleOnClick}                
+                  />
               );
             })}
           </div>
         </div>
         <div className="footer">
           <h1>Select a box to view Changes for that date</h1>
+          {isVisible ? <Footer data={Data}/> :""}
         </div>
       </div>
     );
